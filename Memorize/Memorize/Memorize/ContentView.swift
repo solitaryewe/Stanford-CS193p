@@ -17,10 +17,15 @@ struct ContentView: View {
             ForEach(viewModel.cards) { card in
                 CardView(card: card).onTapGesture { viewModel.choose(card: card) }
             }
+            // Task 3: aspect ratio applied to each CardView.
+            // Chose to put it here rather than making it a part of the returned
+            // CardView because another use of CardView require a different aspect ratio.
+            .aspectRatio(2/3, contentMode: .fit)
         }
-        .padding()  // around the entire HStack
-        .foregroundColor(Color.orange)  // passed on to children
-        .font(Font.largeTitle)
+        .padding()
+        .foregroundColor(Color.orange)
+        // Task 5: choose larger font for less than 5 pairs of cards, smaller otherwise.
+        .font(viewModel.cards.count / 2 < 5 ? .largeTitle : .title)
     }
 }
 

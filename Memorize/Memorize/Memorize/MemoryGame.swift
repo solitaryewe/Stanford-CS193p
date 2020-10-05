@@ -20,6 +20,8 @@ struct MemoryGame<CardContent> {
             cards.append(Card(id: pairIndex*2, isFaceUp: true, content: content))
             cards.append(Card(id: pairIndex*2+1, isFaceUp: true, content: content))
         }
+        // Task 2: shuffling the cards, model's responsibility because it's part of how a MemoryGame plays.
+        cards.shuffle()
     }
     
     func choose(card: Card) {
