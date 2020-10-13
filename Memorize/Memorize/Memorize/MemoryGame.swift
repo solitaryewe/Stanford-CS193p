@@ -20,12 +20,26 @@ struct MemoryGame<CardContent> {
             cards.append(Card(id: pairIndex*2, isFaceUp: true, content: content))
             cards.append(Card(id: pairIndex*2+1, isFaceUp: true, content: content))
         }
-        // Task 2: shuffling the cards, model's responsibility because it's part of how a MemoryGame plays.
+        // Shuffling the cards, model's responsibility because it's part of how a MemoryGame plays.
         cards.shuffle()
     }
     
-    func choose(card: Card) {
+    // Args to functions are constant by default.
+    // Card is a struct, which is a value type, which is copied every time.
+    mutating func choose(_ card: Card) {
         print("Card chosen: \(card)")
+        // Have to find the card in the cards array, then toggle isFaceUp on that one.
+        // (Don't copy the card out - do it in the array.)
+        let chosenIndex: Int = index(of: card)!
+        cards[chosenIndex].isFaceUp.toggle()
+    }
+    
+    // Get index of a Card in the cards array.
+    private func index(of card: Card) -> Int? {
+        for index in 0..<cards.count {
+            if cards[index].id == card.id { return index }
+        }
+        return nil
     }
     
     struct Card: Identifiable {
