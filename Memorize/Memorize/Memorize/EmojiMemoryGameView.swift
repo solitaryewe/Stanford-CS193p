@@ -14,17 +14,38 @@ struct EmojiMemoryGameView: View {
     @ObservedObject var viewModel: EmojiMemoryGame
     
     var body: some View {
-        Grid(viewModel.cards) { card in
-            CardView(card: card)
-                .onTapGesture { viewModel.choose(card: card) }
-                .padding(5)
+        VStack {
+            HStack {
+                // Task 7: theme name.
+                Text(viewModel.gameTheme.name).font(.largeTitle)
+            }
+            .padding(.vertical, 5)
+            
+            HStack {
+                // Task 9: display score.
+                Text("Score: \(viewModel.score)").font(.title3)
+                Spacer()
+                // Task 6: new game button.
+                Button(action: { viewModel.newGame() }) {
+                    Text("New Game")
+                        .font(.title3)
+                        .bold()
+                }
+            }
+            .padding(.horizontal)
+            
+            Grid(viewModel.cards) { card in
+                CardView(card: card)
+                    .onTapGesture { viewModel.choose(card: card) }
+                    .padding(5)
+            }
+            .padding()
+            .foregroundColor(viewModel.gameTheme.color)
         }
-        .padding()
-        .foregroundColor(Color.orange)
     }
 }
 
-
+// MARK: -
 struct CardView: View {
     var card: MemoryGame<String>.Card
     
@@ -45,8 +66,7 @@ struct CardView: View {
         }
     }
     
-    // MARK: - Drawing Constants
-    
+    // CardView Drawing Constants
     let cornerRadius: CGFloat = 10.0
     let edgeLineWidth: CGFloat = 3.0
     private func fontSize(for size: CGSize) -> CGFloat {
@@ -55,6 +75,7 @@ struct CardView: View {
 }
 
 
+// MARK: -
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         let game = EmojiMemoryGame()

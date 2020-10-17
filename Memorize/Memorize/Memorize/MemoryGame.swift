@@ -11,12 +11,17 @@ import Foundation
 // Model
 struct MemoryGame<CardContent> where CardContent: Equatable {
     var cards: Array<Card>
+    private(set) var score: Int = 0
+    private var alreadySeenCards: [Int] = [Int]()
     var indexOfTheOneAndOnlyFaceUpCard: Int? {
         get { cards.indices.filter { index in cards[index].isFaceUp }.only }
         set {
             // newValue is the value passed in.
             // Make all face down except this one.
             for index in cards.indices {
+                if index != newValue && cards[index].isFaceUp && !cards[index].isMatched {
+                    if !alreadySeenCards.contains(index) { alreadySeenCards.append(index) }
+                }
                 cards[index].isFaceUp = index == newValue
             }
         }
@@ -41,19 +46,29 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         if let chosenIndex: Int = cards.firstIndex(matching: card), !cards[chosenIndex].isFaceUp, !cards[chosenIndex].isMatched {
             // , sequential &&
             if let potentialMatchIndex = indexOfTheOneAndOnlyFaceUpCard {
+                // 1 face up card.
                 if cards[chosenIndex].content == cards[potentialMatchIndex].content {
                     // Got a match.
                     cards[chosenIndex].isMatched = true
                     cards[potentialMatchIndex].isMatched = true
+                    // Task 8: keep score, 2 points for a match.
+                    score += 2
+                } else {
+                    // Mismatch.
+                    // Task 8: keep score, -1 point per previously seen card in mismatch.
+                    if alreadySeenCards.contains(potentialMatchIndex) { score -= 1 }
+                    if alreadySeenCards.contains(chosenIndex) { score -= 1 }
                 }
                 cards[chosenIndex].isFaceUp = true
             } else {
-                // 0 or more than one face up card.
+                // 0 or more than 1 face up card.
                 indexOfTheOneAndOnlyFaceUpCard = chosenIndex
             }
         }
     }
     
+    
+    // MARK: -
     struct Card: Identifiable {
         var id: Int
         var isFaceUp: Bool = false
