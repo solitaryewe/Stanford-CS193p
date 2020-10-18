@@ -1,7 +1,7 @@
 # Memorize: *Assignment 2*
 The complete code for this assignment can be found [here](https://github.com/solitaryewe/Stanford-CS193p/tree/21c18487dc1f2bc3474eae082ec911131e35bea4/Memorize/Memorize).
 
-![Memorize: Assignment 2](https://github.com/solitaryewe/Stanford-CS193p/blob/main/Memorize/Screenshots/Assignment2a.png)
+![Memorize: Assignment 2](https://github.com/solitaryewe/Stanford-CS193p/blob/main/Memorize/Screenshots/Assignment2a.png) ![Memorize: Assignment 2](https://github.com/solitaryewe/Stanford-CS193p/blob/main/Memorize/Screenshots/Assignment2b.png)
 
 ## Task 1
 > Get the Memorize game working as demonstrated in lectures 1 through 4.  Type in all the code.  Do not copy/paste from anywhere.
@@ -135,3 +135,73 @@ Text("Score: \(viewModel.score)").font(.title3)
 > Your UI should work in portrait or landscape on any iOS device.  The cards can have any aspect ratio you’d like.  This probably will not require any work on your part (that’s part of  the power of  SwiftUI), but be sure to continue to experiment with running on different simulators in Xcode to be sure.
 
 ✔️
+
+## Extra Credit 1
+> Support a gradient as the “color” for a theme.  Hint: fill() can take a gradient as its argument rather than a color.
+
+Themes are now created with a primaryColor and optional secondaryColor, allowing us to generate a gradient for the theme.  Themes created with only a primaryColor will have a gradient that appears solid:
+```swift
+// EmojiMemoryGame.swift
+struct EmojiMemoryGameTheme {
+    var name: String
+    var emojiSet: [String]
+    private(set) var primaryColor: Color
+    private(set) var secondaryColor: Color?
+    var numberOfPairs: Int?
+
+    var gradient: Gradient {
+        Gradient(colors: [primaryColor, secondaryColor != nil ? secondaryColor! : primaryColor])
+    }
+    var accentColor: Color {
+        primaryColor
+    }
+}
+```
+
+I changed CardView struct to accept a gradient and accent color to use when drawing the cards:
+```swift
+// EmojiMemoryGameView.swift
+struct CardView: View {
+    var card: MemoryGame<String>.Card
+    var gradient: Gradient
+    var accentColor: Color
+
+...
+
+    RoundedRectangle(cornerRadius: cornerRadius).fill(LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom))
+    RoundedRectangle(cornerRadius: cornerRadius).stroke(lineWidth: edgeLineWidth)
+
+...
+```
+
+## Extra Credit 2
+> Modify the scoring system to give more points for choosing cards more quickly.  For example, maybe you get max(10 - (number of  seconds since last card was chosen), 1) x (the number of  points you would have otherwise earned or been penalized with).  (This is just an example, be creative!). You will definitely want to familiarize yourself  with the Date struct.
+
+When setting indexOfTheOneAndOnlyFaceUpCard, update timer to get the date when there is one card face up, because we want the time measured to start when we flip the first card (of a possible match) over.
+```swift
+// MemoryGame.swift
+private var timer: Date = Date()
+
+var indexOfTheOneAndOnlyFaceUpCard: Int? {
+    get { cards.indices.filter { index in cards[index].isFaceUp }.only }
+    set {
+        ...
+        timer = Date()
+    }
+}
+```
+
+When we have a match, more points are awarded for a faster match.
+Date().timeIntervalSince(timer) gives us the number of seconds since we flipped the first card in the pair over:
+```swift
+// MemoryGame.swift
+mutating func choose(_ card: Card) {
+    if let chosenIndex: Int = cards.firstIndex(matching: card), !cards[chosenIndex].isFaceUp, !cards[chosenIndex].isMatched {
+        if let potentialMatchIndex = indexOfTheOneAndOnlyFaceUpCard {
+            // 1 face up card.
+            if cards[chosenIndex].content == cards[potentialMatchIndex].content {
+                // Got a match.
+                let secondsForMatch = Date().timeIntervalSince(timer)
+                score += max(10-Int(secondsForMatch), 2)
+   ...
+```

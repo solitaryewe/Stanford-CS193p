@@ -35,12 +35,11 @@ struct EmojiMemoryGameView: View {
             .padding(.horizontal)
             
             Grid(viewModel.cards) { card in
-                CardView(card: card)
+                CardView(card: card, gradient: viewModel.gameTheme.gradient, accentColor: viewModel.gameTheme.accentColor)
                     .onTapGesture { viewModel.choose(card: card) }
                     .padding(5)
             }
             .padding()
-            .foregroundColor(viewModel.gameTheme.color)
         }
     }
 }
@@ -48,6 +47,8 @@ struct EmojiMemoryGameView: View {
 // MARK: -
 struct CardView: View {
     var card: MemoryGame<String>.Card
+    var gradient: Gradient
+    var accentColor: Color
     
     var body: some View {
         GeometryReader { geometry in
@@ -58,11 +59,14 @@ struct CardView: View {
                     Text(card.content)
                 } else {
                     if !card.isMatched {
-                        RoundedRectangle(cornerRadius: cornerRadius).fill()
+                        // Extra Credit 2
+                        RoundedRectangle(cornerRadius: cornerRadius).fill(LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom))
+                        RoundedRectangle(cornerRadius: cornerRadius).stroke(lineWidth: edgeLineWidth)
                     }
                 }
             }
             .font(Font.system(size: fontSize(for: geometry.size)))
+            .foregroundColor(accentColor)
         }
     }
     
