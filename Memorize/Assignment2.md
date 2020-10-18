@@ -1,5 +1,5 @@
 # Memorize: *Assignment 2*
-The complete code for this assignment can be found [here](https://github.com/solitaryewe/Stanford-CS193p/tree/21c18487dc1f2bc3474eae082ec911131e35bea4/Memorize/Memorize).
+The complete code for this assignment can be found [here](https://github.com/solitaryewe/Stanford-CS193p/tree/d681eecfde1c01a0730530b988fc03425b88b2d8/Memorize/Memorize).
 
 ![Memorize: Assignment 2](https://github.com/solitaryewe/Stanford-CS193p/blob/main/Memorize/Screenshots/Assignment2a.png) ![Memorize: Assignment 2](https://github.com/solitaryewe/Stanford-CS193p/blob/main/Memorize/Screenshots/Assignment2b.png)
 
