@@ -9,8 +9,8 @@
 import SwiftUI
 
 struct Grid<Item, ItemView>: View where Item: Identifiable, ItemView: View {
-    var items: [Item]
-    var viewForItem: (Item) -> ItemView
+    private var items: [Item]
+    private var viewForItem: (Item) -> ItemView
     
     init(_ items: [Item], viewForItem: @escaping (Item) -> ItemView) {
         self.items = items
@@ -34,9 +34,9 @@ struct Grid<Item, ItemView>: View where Item: Identifiable, ItemView: View {
 // MARK: - Preview of Grid
 
 struct Grid_Previews: PreviewProvider {
-    static let fruitEmojis = ["🍊", "🍉", "🍒", "🍓", "🍐", "🥝", "🍌", "🍇"].shuffled()
-    static var items = buildFruit()
-    static func buildFruit() -> [Fruit] {
+    private static let fruitEmojis = ["🍊", "🍉", "🍒", "🍓", "🍐", "🥝", "🍌", "🍇"].shuffled()
+    private static var items = buildFruit()
+    private static func buildFruit() -> [Fruit] {
         var items = [Fruit]()
         for emoji in fruitEmojis {
             items.append(Fruit(yum: emoji))
@@ -50,7 +50,7 @@ struct Grid_Previews: PreviewProvider {
         }
     }
     
-    struct Fruit: Identifiable {
+    private struct Fruit: Identifiable {
         var id = UUID()
         var yum: String
     }

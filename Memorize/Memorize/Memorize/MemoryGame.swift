@@ -10,10 +10,10 @@ import Foundation
 
 // Model
 struct MemoryGame<CardContent> where CardContent: Equatable {
-    var cards: Array<Card>
+    private(set) var cards: Array<Card>
     private(set) var score: Int = 0
     private var alreadySeenCards: [Int] = [Int]()
-    var indexOfTheOneAndOnlyFaceUpCard: Int? {
+    private var indexOfTheOneAndOnlyFaceUpCard: Int? {
         get { cards.indices.filter { index in cards[index].isFaceUp }.only }
         set {
             // newValue is the value passed in.
@@ -24,13 +24,8 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                 }
                 cards[index].isFaceUp = index == newValue
             }
-            // Extra Credit 2: update timer to get the time when there is one card face up, because
-            // we want the time measured to start when we flip the first card (of a possible match) over.
-            timer = Date()
         }
     }
-    // Extra Credit 2
-    private var timer: Date = Date()
     
     init(numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
         cards = Array<Card>()
@@ -54,11 +49,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                 // 1 face up card.
                 if cards[chosenIndex].content == cards[potentialMatchIndex].content {
                     // Got a match.
-                    // Task 8: keep score.
-                    // Extra Credit 2: more points awarded for a faster match.
-                    let secondsForMatch = Date().timeIntervalSince(timer)
-                    score += max(10-Int(secondsForMatch), 2)
-
+                    score += 2
                     cards[chosenIndex].isMatched = true
                     cards[potentialMatchIndex].isMatched = true
                 } else {
