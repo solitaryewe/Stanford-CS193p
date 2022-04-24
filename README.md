@@ -1,4 +1,8 @@
 # Stanford CS193p: Developing Apps for iOS
+<b>This will no longer be updated.</b><br>
+<i>Because I got side tracked and never finished my previous attempt... 🫠</i><br>
+For updated version: https://github.com/solitaryewe/Stanford-CS193p-Updated
+
 🎉 CS193p Party Crasher!! 🎉<br>
 My work as I follow along with Stanford CS193p: Developing Apps for iOS.<br>
 *Spring 2020 version.*
